@@ -63,12 +63,12 @@ M.misc = function()
    end
 
    local function required_mappings()
-      map("n", maps.close_buffer, ":lua require('core.utils').close_buffer() <CR>") -- close  buffer
-      map("n", maps.copy_whole_file, ":%y+ <CR>") -- copy whole file content
-      map("n", maps.new_buffer, ":enew <CR>") -- new buffer
-      map("n", maps.new_tab, ":tabnew <CR>") -- new tabs
+      -- map("n", maps.close_buffer, ":lua require('core.utils').close_buffer() <CR>") -- close  buffer
+      -- map("n", maps.copy_whole_file, ":%y+ <CR>") -- copy whole file content
+      -- map("n", maps.new_buffer, ":enew <CR>") -- new buffer
+      -- map("n", maps.new_tab, ":tabnew <CR>") -- new tabs
       map("n", maps.line_number_toggle, ":set nu! <CR>") -- toggle numbers
-      map("n", maps.save_file, ":w <CR>") -- ctrl + s to save file
+      -- map("n", maps.save_file, ":w <CR>") -- ctrl + s to save file
 
       -- terminal mappings --
       local term_maps = maps.terminal
@@ -149,13 +149,13 @@ M.comment = function()
 end
 
 M.dashboard = function()
-   local m = plugin_maps.dashboard
+   -- local m = plugin_maps.dashboard
 
-   map("n", m.bookmarks, ":DashboardJumpMarks <CR>")
-   map("n", m.new_file, ":DashboardNewFile <CR>")
-   map("n", m.open, ":Dashboard <CR>")
-   map("n", m.session_load, ":SessionLoad <CR>")
-   map("n", m.session_save, ":SessionSave <CR>")
+   -- map("n", m.bookmarks, ":DashboardJumpMarks <CR>")
+   -- map("n", m.new_file, ":DashboardNewFile <CR>")
+   -- map("n", m.open, ":Dashboard <CR>")
+   -- map("n", m.session_load, ":SessionLoad <CR>")
+   -- map("n", m.session_save, ":SessionSave <CR>")
 end
 
 M.nvimtree = function()

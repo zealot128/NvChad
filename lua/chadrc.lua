@@ -8,7 +8,7 @@ M.ui = {
    italic_comments = false,
 
    -- theme to be used, to see all available themes, open the theme switcher by <leader> + th
-   theme = "onedark",
+   theme = "javacafe",
 
    -- theme toggler, toggle between two themes, see theme_toggleer mappings
    theme_toggler = {
@@ -39,23 +39,23 @@ M.ui.plugin = {
 
 -- non plugin normal, available without any plugins
 M.options = {
-   clipboard = "unnamedplus",
+   clipboard = "",
    cmdheight = 1,
-   copy_cut = true, -- copy cut text ( x key ), visual and normal mode
+   copy_cut = false, -- copy cut text ( x key ), visual and normal mode
    copy_del = true, -- copy deleted text ( dd key ), visual and normal mode
    expandtab = true,
    hidden = true,
    ignorecase = true,
-   insert_nav = true, -- navigation in insertmode
-   mapleader = " ",
-   mouse = "a",
-   number = true,
+   insert_nav = false, -- navigation in insertmode
+   mapleader = "\\",
+   mouse = "",
+   number = false,
    -- relative numbers in normal mode tool at the bottom of options.lua
    numberwidth = 2,
    permanent_undo = true,
    shiftwidth = 2,
    smartindent = true,
-   tabstop = 8, -- Number of spaces that a <Tab> in the file counts for
+   tabstop = 2, -- Number of spaces that a <Tab> in the file counts for
    timeoutlen = 400,
    relativenumber = false,
    ruler = false,
@@ -75,13 +75,13 @@ M.options.plugin = {
 -- enable and disable plugins (false for disable)
 M.plugin_status = {
    autosave = false, -- to autosave files
-   blankline = true, -- beautified blank lines
-   bufferline = true, -- buffer shown as tabs
+   blankline = false, -- beautified blank lines
+   bufferline = false, -- buffer shown as tabs
    cheatsheet = true, -- fuzzy search your commands/keymappings
    colorizer = true,
    comment = true, -- universal commentor
    dashboard = false, -- a nice looking dashboard
-   esc_insertmode = true, -- escape from insert mode using custom keys
+   esc_insertmode = false, -- escape from insert mode using custom keys
    feline = true, -- statusline
    gitsigns = true, -- gitsigns in statusline
    lspsignature = true, -- lsp enhancements
@@ -158,9 +158,9 @@ M.mappings.plugin = {
    dashboard = {
       bookmarks = "<leader>bm",
       new_file = "<leader>fn", -- basically create a new buffer
-      open = "<leader>db", -- open dashboard
-      session_load = "<leader>l", -- load a saved session
-      session_save = "<leader>s", -- save a session
+      -- open = "<leader>db", -- open dashboard
+      -- session_load = "<leader>l", -- load a saved session
+      -- session_save = "<leader>s", -- save a session
    },
    -- note: this is an edditional mapping to escape, escape key will still work
    better_escape = {
@@ -173,8 +173,8 @@ M.mappings.plugin = {
       format = "<leader>fm",
    },
    telescope = {
-      buffers = "<leader>fb",
-      find_files = "<leader>ff",
+      buffers = "<C-b>",
+      find_files = "<C-p>",
       git_commits = "<leader>cm",
       git_status = "<leader>gt",
       help_tags = "<leader>fh",
@@ -191,10 +191,10 @@ M.mappings.plugin = {
       minimalistic_mode = "<leader>zm", -- as it is
    },
    vim_fugitive = {
-      diff_get_2 = "<leader>gh",
-      diff_get_3 = "<leader>gl",
-      git = "<leader>gs",
-      git_blame = "<leader>gb",
+      -- diff_get_2 = "<leader>gh",
+      -- diff_get_3 = "<leader>gl",
+      -- git = "<leader>gs",
+      -- git_blame = "<leader>gb",
    },
 }
 
@@ -220,5 +220,52 @@ M.plugins = {
       servers = {},
    },
 }
+
+vim.opt.wildignorecase = true
+vim.opt.wildmenu = true
+vim.opt.wildmode= "list:longest,full"
+vim.opt.gdefault = true
+vim.opt.wildignorecase = true
+
+-- Save on enter
+vim.api.nvim_exec([[
+  nnoremap <silent><expr> <CR> &buftype is# '' ? ":w\<CR>" : "\<CR>"
+]], false)
+vim.api.nvim_exec([[command! ReplaceRuby19Hash :%s/:\([a-z_]\+\) *=> */\1: /]], true)
+vim.api.nvim_exec([[command! Ruby19HashConvert :%s/:\([a-z_]\+\) *=> */\1: /]], true)
+vim.api.nvim_exec([[command! RubyHashToSym :%s/["']\([^"']\+\)["'] *=> */\1: /]], true)
+local function map(mode, lhs, rhs, opts)
+    local options = {noremap = true, silent = true}
+    if opts then
+        options = vim.tbl_extend("force", options, opts)
+    end
+    vim.api.nvim_set_keymap(mode, lhs, rhs, options)
+end
+map("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>'")
+map('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>')
+function CopyRspecForLine()
+  local row = vim.fn.line(".")
+  local file = vim.fn.expand("%")
+  local testcommand = "R " .. file .. ":" .. row
+  print(testcommand)
+  local tmuxcmd = "echo '" .. testcommand .. "' | tmux loadb -"
+  local _error = vim.fn.system(tmuxcmd)
+  return testcommand
+end
+
+function CopyRealPath()
+  local file = vim.fn.resolve(vim.fn.expand("%:p"))
+  local testcommand = "echo " .. file
+  local tmuxcmd = testcommand .. " | tmux loadb -"
+  print(file)
+  local _error = vim.fn.system(tmuxcmd)
+  return testcommand
+end
+map("n", "<leader>rr", "<cmd>lua CopyRspecForLine()<CR>")
+map("n", "<leader>rp", "<cmd>lua CopyRealPath()<CR>")
+map("n", "<F3>", ":nohls<CR>")
+map("n", "<F2>", ":set invpaste paste?<CR>")
+map("n", "<F7>", ":ALEFix<CR>")
+map("n", "<C-f>", [[:Telescope find_files<CR>]])
 
 return M

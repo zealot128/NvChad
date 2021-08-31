@@ -9,6 +9,75 @@ local use = packer.use
 return packer.startup(function()
    local plugin_status = require("core.utils").load_config().plugin_status
 
+  -- nvim file:25  - open file with line number
+  use "wsdjeg/vim-fetch"
+  -- use 'digitaltoad/vim-pug'
+  use 'tpope/vim-surround'
+  -- let g:rg_command = 'rg --no-messages --vimgrep'
+  use 'jremmen/vim-ripgrep'
+  use 'tpope/vim-tbone'
+  use 'tpope/vim-eunuch'
+  use 'tpope/vim-fugitive'
+  use 'tpope/vim-unimpaired'
+  -- use 'tpope/vim-vinegar'
+  use 'tpope/vim-repeat'
+  use 'chaoren/vim-wordmotion'
+  use {'tzachar/cmp-tabnine', run='./install.sh', requires = 'hrsh7th/nvim-cmp'}
+  use {
+    'lmeijvogel/vim-yaml-helper',
+    config = function()
+      vim.g["vim_yaml_helper#always_get_root"] = 0
+      vim.g["vim_yaml_helper#auto_display_path"] = 0
+    end
+  }
+  use {
+    "vimwiki/vimwiki",
+    cmd = "VimwikiIndex",
+    setup = function()
+      vim.g.vimwiki_list = {
+        {
+          path = '~/vimwiki/',
+          syntax = 'markdown',
+          ext = '.md',
+          custom_wiki2html = 'vimwiki_markdown',
+          template_path = '~/vimwiki/templates/',
+          template_default = 'default',
+          template_ext = '.tpl',
+          path_html = '~/vimwiki/site_html/',
+          html_filename_parameterization = 1,
+        },
+      }
+    end
+  }
+  use {
+    'nvim-treesitter/playground',
+    after = "nvim-treesitter",
+    config = function()
+      require "nvim-treesitter.configs".setup {
+        playground = {
+          enable = true,
+          disable = {},
+          updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
+          persist_queries = false, -- Whether the query persists across vim sessions
+          keybindings = {
+            toggle_query_editor = 'o',
+            toggle_hl_groups = 'i',
+            toggle_injected_languages = 't',
+            toggle_anonymous_nodes = 'a',
+            toggle_language_display = 'I',
+            focus_language = 'f',
+            unfocus_language = 'F',
+            update = 'R',
+            goto_node = '<cr>',
+            show_help = '?',
+          },
+        }
+      }
+    end
+  }
+
+
+
    -- this is arranged on the basis of when a plugin starts
 
    -- this is the nvchad core repo containing utilities for some features like theme swticher, no need to lazy load
