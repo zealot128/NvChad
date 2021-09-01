@@ -4,6 +4,16 @@ if not present then
 end
 
 telescope.setup {
+   pickers = {
+     find_files = {
+       disable_devicons = true,
+       previewer = false,
+     },
+     buffers = {
+       disable_devicons = true,
+       previewer = false,
+     }
+   },
    defaults = {
       vimgrep_arguments = {
          "rg",
@@ -43,6 +53,7 @@ telescope.setup {
       borderchars = { "─", "│", "─", "│", "╭", "╮", "╯", "╰" },
       color_devicons = true,
       use_less = true,
+      sort_mru = true,
       set_env = { ["COLORTERM"] = "truecolor" }, -- default = nil,
       file_previewer = require("telescope.previewers").vim_buffer_cat.new,
       grep_previewer = require("telescope.previewers").vim_buffer_vimgrep.new,
@@ -51,6 +62,10 @@ telescope.setup {
       buffer_previewer_maker = require("telescope.previewers").buffer_previewer_maker,
    },
    extensions = {
+     buffers = {
+       buffers = true,
+       sort_mru = true,
+     },
       fzf = {
          fuzzy = true, -- false will only do exact matching
          override_generic_sorter = false, -- override the generic sorter

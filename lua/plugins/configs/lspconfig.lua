@@ -1,6 +1,7 @@
-local present1, nvim_lsp = pcall(require, "lspconfig")
+local present1, lspconfig = pcall(require, "lspconfig")
+local present2, lspinstall = pcall(require, "lspinstall")
 
-if not present1 then
+if not (present1 or present2) then
    return
 end
 
@@ -56,24 +57,81 @@ capabilities.textDocument.completion.completionItem.resolveSupport = {
    },
 }
 
-local servers = require("core.utils").load_config().plugins.lspconfig.servers
+-- lspInstall + lspconfig stuff
 
-for _, lsp in ipairs(servers) do
-   nvim_lsp[lsp].setup {
-      on_attach = on_attach,
-      capabilities = capabilities,
-      -- root_dir = vim.loop.cwd,
-      flags = {
-         debounce_text_changes = 150,
-      },
+local function setup_servers()
+   lspinstall.setup()
+   local servers = lspinstall.installed_servers()
+
+   lspconfig.volar.setup {
+     typescript = '/home/local/PDC01/swi/Projects/jobsdaheim/node_modules/typescript/lib/tsserverlibrary.js',
+     settings = {
+       volar = {
+         tsPlugin = false,
+         tsPluginStatus = false,
+         takeOverBuiltinTsExtension = false,
+       }
+     },
+     volar = {
+       tsPlugin = false,
+       tsPluginStatus = false,
+       takeOverBuiltinTsExtension = false,
+     },
+     on_attach = on_attach,
+     capabilities = capabilities,
    }
+
+   for _, lang in pairs(servers) do
+      if lang ~= "lua" then
+         lspconfig[lang].setup {
+            on_attach = on_attach,
+            capabilities = capabilities,
+            flags = {
+               debounce_text_changes = 500,
+            },
+            -- root_dir = vim.loop.cwd,
+         }
+      elseif lang == "lua" then
+         lspconfig[lang].setup {
+            on_attach = on_attach,
+            capabilities = capabilities,
+            flags = {
+               debounce_text_changes = 500,
+            },
+            settings = {
+               Lua = {
+                  diagnostics = {
+                     globals = { "vim" },
+                  },
+                  workspace = {
+                     library = {
+                        [vim.fn.expand "$VIMRUNTIME/lua"] = true,
+                        [vim.fn.expand "$VIMRUNTIME/lua/vim/lsp"] = true,
+                     },
+                     maxPreload = 100000,
+                     preloadFileSize = 10000,
+                  },
+                  telemetry = {
+                     enable = false,
+                  },
+               },
+            },
+         }
+      end
+   end
 end
 
--- require("anyfile").setup_luaLsp(on_attach, capabilities) -- this will be removed soon after the custom hooks PR
+setup_servers()
+
+-- Automatically reload after `:LspInstall <server>` so we don't have to restart neovim
+lspinstall.post_install_hook = function()
+   setup_servers() -- reload installed servers
+   vim.cmd "bufdo e"
+end
 
 -- replace the default lsp diagnostic symbols
 local function lspSymbol(name, icon)
-   vim.fn.sign_define("LspDiagnosticsSign" .. name, { text = icon, numhl = "LspDiagnosticsDefault" .. name })
+   vim.fn.sign_define("LspDiagnosticsSign" .. name, { text = icon, numhl = "LspDiagnosticsDefaul" .. name })
 end
 
 lspSymbol("Error", "")

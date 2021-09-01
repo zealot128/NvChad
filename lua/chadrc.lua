@@ -31,7 +31,7 @@ M.ui.plugin = {
       -- these are filetypes, not pattern matched
       -- if a filetype is present in shown, it will always show the statusline, irrespective of filetypes in hidden
       hidden = {},
-      shown = {},
+      shown = { "ruby" },
       -- default, round , slant , block , arrow
       style = "default",
    },
@@ -86,7 +86,7 @@ M.plugin_status = {
    gitsigns = true, -- gitsigns in statusline
    lspsignature = true, -- lsp enhancements
    neoformat = true, -- universal formatter
-   neoscroll = true, -- smooth scroll
+   neoscroll = false, -- smooth scroll
    telescope_media = false, -- see media files in telescope picker
    truezen = false, -- no distraction mode for nvim
    vim_fugitive = false, -- git in nvim
@@ -223,43 +223,44 @@ M.plugins = {
 
 vim.opt.wildignorecase = true
 vim.opt.wildmenu = true
-vim.opt.wildmode= "list:longest,full"
+vim.opt.wildmode = "list:longest,full"
 vim.opt.gdefault = true
 vim.opt.wildignorecase = true
 
 -- Save on enter
-vim.api.nvim_exec([[
+vim.api.nvim_exec(
+[[
   nnoremap <silent><expr> <CR> &buftype is# '' ? ":w\<CR>" : "\<CR>"
 ]], false)
 vim.api.nvim_exec([[command! ReplaceRuby19Hash :%s/:\([a-z_]\+\) *=> */\1: /]], true)
 vim.api.nvim_exec([[command! Ruby19HashConvert :%s/:\([a-z_]\+\) *=> */\1: /]], true)
 vim.api.nvim_exec([[command! RubyHashToSym :%s/["']\([^"']\+\)["'] *=> */\1: /]], true)
 local function map(mode, lhs, rhs, opts)
-    local options = {noremap = true, silent = true}
-    if opts then
-        options = vim.tbl_extend("force", options, opts)
-    end
-    vim.api.nvim_set_keymap(mode, lhs, rhs, options)
+   local options = { noremap = true, silent = true }
+   if opts then
+      options = vim.tbl_extend("force", options, opts)
+   end
+   vim.api.nvim_set_keymap(mode, lhs, rhs, options)
 end
 map("n", "<leader>ca", "<cmd>lua vim.lsp.buf.code_action()<CR>'")
-map('n', '<leader>rn', '<cmd>lua vim.lsp.buf.rename()<CR>')
+map("n", "<leader>rn", "<cmd>lua vim.lsp.buf.rename()<CR>")
 function CopyRspecForLine()
-  local row = vim.fn.line(".")
-  local file = vim.fn.expand("%")
-  local testcommand = "R " .. file .. ":" .. row
-  print(testcommand)
-  local tmuxcmd = "echo '" .. testcommand .. "' | tmux loadb -"
-  local _error = vim.fn.system(tmuxcmd)
-  return testcommand
+   local row = vim.fn.line "."
+   local file = vim.fn.expand "%"
+   local testcommand = "R " .. file .. ":" .. row
+   print(testcommand)
+   local tmuxcmd = "echo '" .. testcommand .. "' | tmux loadb -"
+   local _error = vim.fn.system(tmuxcmd)
+   return testcommand
 end
 
 function CopyRealPath()
-  local file = vim.fn.resolve(vim.fn.expand("%:p"))
-  local testcommand = "echo " .. file
-  local tmuxcmd = testcommand .. " | tmux loadb -"
-  print(file)
-  local _error = vim.fn.system(tmuxcmd)
-  return testcommand
+   local file = vim.fn.resolve(vim.fn.expand "%:p")
+   local testcommand = "echo " .. file
+   local tmuxcmd = testcommand .. " | tmux loadb -"
+   print(file)
+   local _error = vim.fn.system(tmuxcmd)
+   return testcommand
 end
 map("n", "<leader>rr", "<cmd>lua CopyRspecForLine()<CR>")
 map("n", "<leader>rp", "<cmd>lua CopyRealPath()<CR>")
@@ -267,5 +268,100 @@ map("n", "<F3>", ":nohls<CR>")
 map("n", "<F2>", ":set invpaste paste?<CR>")
 map("n", "<F7>", ":ALEFix<CR>")
 map("n", "<C-f>", [[:Telescope find_files<CR>]])
+
+function openDirOfFile()
+   local file = vim.fn.resolve(vim.fn.expand "%:h")
+   local cmd = ":e " .. file
+   print(cmd)
+
+   vim.cmd(cmd)
+end
+map("n", "-", [[<cmd>lua openDirOfFile()<CR>]])
+
+vim.api.nvim_exec(
+   [[
+  augroup yaml
+    autocmd Filetype yaml set fdm=indent
+    autocmd BufRead,BufNewFile *de.yml silent setl spell spelllang=de
+  augroup END
+]],
+   false
+)
+vim.api.nvim_exec(
+   [[
+  augroup jsopen
+   au BufNewFile,BufRead app/javascript/*.js setl path+=app/javascript/,node_modules
+   au BufNewFile,BufRead app/javascript/*.js setl isfname+=@-@
+   au BufNewFile,BufRead app/javascript/*.js setl suffixesadd+=.vue,.json,.scss,.svelte,.ts
+ augroup END
+]],
+   false
+)
+
+vim.api.nvim_exec(
+   [[
+  augroup tsopen
+   au BufNewFile,BufRead  app/javascript/*.ts  setl path+=app/javascript/,node_modules
+   au BufNewFile,BufRead  app/javascript/*.ts  setl isfname+=@-@
+   au BufNewFile,BufRead  app/javascript/*.ts  setl suffixesadd+=.vue,.json,.scss,.svelte
+ augroup END
+]],
+   false
+)
+vim.api.nvim_exec(
+   [[
+  augroup vueopen
+   au BufNewFile,BufRead app/javascript/*.vue setl path+=app/javascript/,node_modules
+   au BufNewFile,BufRead app/javascript/*.vue setl isfname+=@-@
+   au BufNewFile,BufRead app/javascript/*.vue setl suffixesadd+=.js,.json,.scss,.ts,.vue
+ augroup END
+]],
+   false
+)
+vim.api.nvim_exec(
+   [[
+  augroup svelteopen
+   au BufNewFile,BufRead app/javascript/*.svelte setl path+=app/javascript/,node_modules
+   au BufNewFile,BufRead app/javascript/*.svelte setl isfname+=@-@
+   au BufNewFile,BufRead app/javascript/*.svelte setl suffixesadd+=.js,.json,.scss,.ts
+ augroup END
+]],
+   false
+)
+
+vim.cmd [[
+ au BufNewFile,BufRead app/javascript/*.scss |
+       setl path+=app/javascript/,node_modules |
+       setl suffixesadd+=.css,.scss,.sass |
+       setl isfname+=@-@ |
+       setl inex=substitute(v:fname,'^\\~','','')
+]]
+
+vim.cmd [[
+ au BufNewFile,BufRead */*.lua setl path+=lua
+]]
+
+vim.cmd 'au TextYankPost * lua vim.highlight.on_yank {on_visual = false}'
+vim.cmd 'au TextYankPost * lua vim.highlight.on_yank {on_visual = false}'
+
+vim.api.nvim_exec(
+[[
+  set wildignore+=*.exe,*.swp,.DS_Store,*~,*.o
+  set wildignore+=*/tmp/*,*.so,*.swp,*.zip
+  set wildignore+=*/log/*
+  set wildignore+=*/coverage/*
+  set wildignore+=*/public/system/*  " Rails images
+]], false)
+
+-- " Automatically re-read files changed outside
+vim.opt.autoread = true
+vim.opt.wrap = true
+vim.api.nvim_exec([[autocmd CmdwinEnter * nnoremap <buffer> <esc> :q<cr>]], true)
+vim.opt.foldlevelstart = 5
+
+-- " Delete every useless whitespace
+vim.api.nvim_exec([[autocmd BufWritePre * :%s/\s\+$//e]], true)
+
+vim.opt.includeexpr = [[substitute(v:fname, '^[/\~@]\+', '', '')]]
 
 return M

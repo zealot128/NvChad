@@ -9,72 +9,110 @@ local use = packer.use
 return packer.startup(function()
    local plugin_status = require("core.utils").load_config().plugin_status
 
-  -- nvim file:25  - open file with line number
-  use "wsdjeg/vim-fetch"
-  -- use 'digitaltoad/vim-pug'
-  use 'tpope/vim-surround'
-  -- let g:rg_command = 'rg --no-messages --vimgrep'
-  use 'jremmen/vim-ripgrep'
-  use 'tpope/vim-tbone'
-  use 'tpope/vim-eunuch'
-  use 'tpope/vim-fugitive'
-  use 'tpope/vim-unimpaired'
-  -- use 'tpope/vim-vinegar'
-  use 'tpope/vim-repeat'
-  use 'chaoren/vim-wordmotion'
-  use {'tzachar/cmp-tabnine', run='./install.sh', requires = 'hrsh7th/nvim-cmp'}
-  use {
-    'lmeijvogel/vim-yaml-helper',
-    config = function()
-      vim.g["vim_yaml_helper#always_get_root"] = 0
-      vim.g["vim_yaml_helper#auto_display_path"] = 0
-    end
-  }
-  use {
-    "vimwiki/vimwiki",
-    cmd = "VimwikiIndex",
-    setup = function()
-      vim.g.vimwiki_list = {
-        {
-          path = '~/vimwiki/',
-          syntax = 'markdown',
-          ext = '.md',
-          custom_wiki2html = 'vimwiki_markdown',
-          template_path = '~/vimwiki/templates/',
-          template_default = 'default',
-          template_ext = '.tpl',
-          path_html = '~/vimwiki/site_html/',
-          html_filename_parameterization = 1,
-        },
-      }
-    end
-  }
-  use {
-    'nvim-treesitter/playground',
-    after = "nvim-treesitter",
-    config = function()
-      require "nvim-treesitter.configs".setup {
-        playground = {
-          enable = true,
-          disable = {},
-          updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
-          persist_queries = false, -- Whether the query persists across vim sessions
-          keybindings = {
-            toggle_query_editor = 'o',
-            toggle_hl_groups = 'i',
-            toggle_injected_languages = 't',
-            toggle_anonymous_nodes = 'a',
-            toggle_language_display = 'I',
-            focus_language = 'f',
-            unfocus_language = 'F',
-            update = 'R',
-            goto_node = '<cr>',
-            show_help = '?',
-          },
-        }
-      }
-    end
-  }
+   -- nvim file:25  - open file with line number
+   use "wsdjeg/vim-fetch"
+   -- use 'digitaltoad/vim-pug'
+   use "tpope/vim-surround"
+   -- let g:rg_command = 'rg --no-messages --vimgrep'
+   use {
+     -- TODO https://github.com/jremmen/vim-ripgrep/pull/56
+     -- "jremmen/vim-ripgrep"
+    "tacahiroy/vim-ripgrep",
+    branch = 'fix-e1208'
+   }
+   use "tpope/vim-tbone"
+   use "tpope/vim-eunuch"
+   use "tpope/vim-unimpaired"
+   -- use 'tpope/vim-vinegar'
+   use "tpope/vim-repeat"
+   use "chaoren/vim-wordmotion"
+   use "slim-template/vim-slim"
+   -- :Bdelete nameless
+   -- :Bdelete hidden
+   use "Asheq/close-buffers.vim"
+   use {
+      "lmeijvogel/vim-yaml-helper",
+      config = function()
+         vim.g["vim_yaml_helper#always_get_root"] = 0
+         vim.g["vim_yaml_helper#auto_display_path"] = 0
+      end,
+   }
+   use {
+     "vimwiki/vimwiki",
+     cmd = "VimwikiIndex",
+     setup = function()
+       vim.g.vimwiki_list = {
+         {
+           path = '~/vimwiki/',
+           syntax = 'markdown',
+           ext = '.md',
+           custom_wiki2html = 'vimwiki_markdown',
+           template_path = '~/vimwiki/templates/',
+           template_default = 'default',
+           template_ext = '.tpl',
+           path_html = '~/vimwiki/site_html/',
+           html_filename_parameterization = 1,
+         },
+       }
+     end
+   }
+   use {
+     "JoosepAlviste/nvim-ts-context-commentstring",
+     after = "nvim-treesitter",
+   }
+   use {
+     'nvim-treesitter/playground',
+     after = "nvim-treesitter",
+     command = "TSPlaygroundToggle",
+     config = function()
+       require "nvim-treesitter.configs".setup {
+         playground = {
+           enable = true,
+           disable = {},
+           updatetime = 25, -- Debounced time for highlighting nodes in the playground from source code
+           persist_queries = false, -- Whether the query persists across vim sessions
+           keybindings = {
+             toggle_query_editor = 'o',
+             toggle_hl_groups = 'i',
+             toggle_injected_languages = 't',
+             toggle_anonymous_nodes = 'a',
+             toggle_language_display = 'I',
+             focus_language = 'f',
+             unfocus_language = 'F',
+             update = 'R',
+             goto_node = '<cr>',
+             show_help = '?',
+           },
+         }
+       }
+      end,
+   }
+   use {
+      "tpope/vim-rails",
+      setup = function()
+         require "plugins/configs/vim-rails"
+      end,
+   }
+   use {
+      "tpope/vim-bundler",
+   }
+   use {
+      "AndrewRadev/splitjoin.vim",
+      setup = function()
+         vim.g.splitjoin_ruby_curly_braces = 0
+         vim.g.splitjoin_ruby_hanging_args = 0
+         vim.g.splitjoin_ruby_do_block_split = 0
+      end,
+   }
+   use {
+     "dense-analysis/ale",
+     setup = function()
+       require("plugins.configs.ale")
+     end
+   }
+   use {
+     "rhysd/vim-lsp-ale"
+   }
 
 
 
@@ -171,31 +209,23 @@ return packer.startup(function()
       end,
    }
 
-   -- smooth scroll
-   use {
-      "karb94/neoscroll.nvim",
-      disable = not plugin_status.neoscroll,
-      opt = true,
-      config = function()
-         require("plugins.configs.others").neoscroll()
-      end,
-      setup = function()
-         require("core.utils").packer_lazy_load "neoscroll.nvim"
-      end,
-   }
-
    -- lsp stuff
 
    use {
-      "neovim/nvim-lspconfig",
+      "kabouzeid/nvim-lspinstall",
       opt = true,
       setup = function()
-         require("core.utils").packer_lazy_load "nvim-lspconfig"
+         require("core.utils").packer_lazy_load "nvim-lspinstall"
          -- reload the current file so lsp actually starts for it
          vim.defer_fn(function()
             vim.cmd "silent! e %"
          end, 0)
       end,
+   }
+
+   use {
+      "neovim/nvim-lspconfig",
+      after = "nvim-lspinstall",
       config = function()
          require "plugins.configs.lspconfig"
       end,
@@ -210,41 +240,12 @@ return packer.startup(function()
       end,
    }
 
-   use {
-      "andymass/vim-matchup",
-      disable = not plugin_status.vim_matchup,
-      opt = true,
-      setup = function()
-         require("core.utils").packer_lazy_load "vim-matchup"
-      end,
-   }
-
-   -- load autosave only if its globally enabled
-   use {
-      disable = not plugin_status.autosave,
-      "Pocco81/AutoSave.nvim",
-      config = function()
-         require("plugins.configs.others").autosave()
-      end,
-      cond = function()
-         return require("core.utils").load_config().options.plugin.autosave == true
-      end,
-   }
-
-   use {
-      "jdhao/better-escape.vim",
-      disable = not plugin_status.esc_insertmode,
-      event = "InsertEnter",
-      setup = function()
-         require("plugins.configs.others").better_escape()
-      end,
-   }
 
    -- load luasnips + cmp related in insert mode only
 
    use {
       "rafamadriz/friendly-snippets",
-      event = "InsertEnter",
+      -- event = "InsertEnter",
    }
 
    use {
@@ -253,6 +254,20 @@ return packer.startup(function()
       config = function()
          require "plugins.configs.cmp"
       end,
+   }
+   use {
+     "tzachar/cmp-tabnine",
+     run = "./install.sh",
+     requires = "hrsh7th/nvim-cmp",
+     after = "cmp_luasnip",
+     config = function()
+       local tabnine = require('cmp_tabnine.config')
+       tabnine:setup({
+         max_lines = 1000;
+         max_num_results = 20;
+         sort = true;
+       })
+     end
    }
 
    use {
@@ -294,17 +309,6 @@ return packer.startup(function()
    }
 
    use {
-      "glepnir/dashboard-nvim",
-      disable = not plugin_status.dashboard,
-      config = function()
-         require "plugins.configs.dashboard"
-      end,
-      setup = function()
-         require("core.mappings").dashboard()
-      end,
-   }
-
-   use {
       "sbdchd/neoformat",
       disable = not plugin_status.neoformat,
       cmd = "Neoformat",
@@ -329,7 +333,7 @@ return packer.startup(function()
    -- file managing , picker etc
    use {
       "kyazdani42/nvim-tree.lua",
-      cmd = { "NvimTreeToggle", "NvimTreeFocus" },
+      -- cmd = { "NvimTreeToggle", "NvimTreeFocus" },
       config = function()
          require "plugins.configs.nvimtree"
       end,
@@ -376,32 +380,16 @@ return packer.startup(function()
    }
 
    use {
-      "Pocco81/TrueZen.nvim",
-      disable = not plugin_status.truezen,
-      cmd = {
-         "TZAtaraxis",
-         "TZMinimalist",
-         "TZFocus",
-      },
-      config = function()
-         require "plugins.configs.zenmode"
-      end,
-      setup = function()
-         require("core.mappings").truezen()
-      end,
-   }
-
-   use {
       "tpope/vim-fugitive",
-      disable = not plugin_status.vim_fugitive,
-      cmd = {
-         "Git",
-         "Gdiff",
-         "Gdiffsplit",
-         "Gvdiffsplit",
-         "Gwrite",
-         "Gw",
-      },
+      -- disable = not plugin_status.vim_fugitive,
+      -- cmd = {
+      --    "Git",
+      --    "Gdiff",
+      --    "Gdiffsplit",
+      --    "Gvdiffsplit",
+      --    "Gwrite",
+      --    "Gw",
+      -- },
       setup = function()
          require("core.mappings").vim_fugitive()
       end,

@@ -73,6 +73,20 @@ components.active[1][1] = {
    } },
 }
 
+components.inactive[1][1] = {
+   provider = statusline_style.main_icon,
+
+   hl = {
+      fg = colors.statusline_bg,
+      bg = colors.nord_blue,
+   },
+
+   right_sep = { str = statusline_style.right, hl = {
+      fg = colors.nord_blue,
+      bg = colors.one_bg2,
+   } },
+}
+
 components.active[1][2] = {
    provider = statusline_style.right,
 
@@ -84,14 +98,14 @@ components.active[1][2] = {
 
 components.active[1][3] = {
    provider = function()
+      local path = vim.fn.expand "%"
       local filename = vim.fn.expand "%:t"
       local extension = vim.fn.expand "%:e"
       local icon = require("nvim-web-devicons").get_icon(filename, extension)
       if icon == nil then
          icon = ""
-         return icon
       end
-      return icon .. " " .. filename .. " "
+      return icon .. " " .. path .. " "
    end,
    hl = {
       fg = colors.white,

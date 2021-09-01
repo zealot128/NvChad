@@ -20,50 +20,6 @@ vim.cmd [[ autocmd BufEnter,BufWinEnter,FileType,WinEnter * lua require("core.ut
 -- vim.cmd [[ autocmd Filetype python setlocal expandtab tabstop=4 shiftwidth=4 softtabstop=4 ]]
 
 
-vim.api.nvim_exec([[
-  augroup yaml
-    autocmd Filetype yaml set fdm=indent
-    autocmd BufRead,BufNewFile *de.yml silent setl spell spelllang=de
-  augroup END
-]], false)
-vim.api.nvim_exec([[
-  augroup jsopen
-   au BufNewFile,BufRead app/javascript/*.js setl path+=app/javascript/,node_modules
-   au BufNewFile,BufRead app/javascript/*.js setl isfname+=@-@
-   au BufNewFile,BufRead app/javascript/*.js setl suffixesadd+=.vue,.json,.scss,.svelte,.ts
- augroup END
-]], false)
-
-vim.api.nvim_exec([[
-  augroup tsopen
-   au BufNewFile,BufRead  app/javascript/*.ts  setl path+=app/javascript/,node_modules
-   au BufNewFile,BufRead  app/javascript/*.ts  setl isfname+=@-@
-   au BufNewFile,BufRead  app/javascript/*.ts  setl suffixesadd+=.vue,.json,.scss,.svelte
- augroup END
-]], false)
-vim.api.nvim_exec([[
-  augroup vueopen
-   au BufNewFile,BufRead app/javascript/*.vue setl path+=app/javascript/,node_modules
-   au BufNewFile,BufRead app/javascript/*.vue setl isfname+=@-@
-   au BufNewFile,BufRead app/javascript/*.vue setl suffixesadd+=.js,.json,.scss,.ts
- augroup END
-]], false)
-vim.api.nvim_exec([[
-  augroup svelteopen
-   au BufNewFile,BufRead app/javascript/*.svelte setl path+=app/javascript/,node_modules
-   au BufNewFile,BufRead app/javascript/*.svelte setl isfname+=@-@
-   au BufNewFile,BufRead app/javascript/*.svelte setl suffixesadd+=.js,.json,.scss,.ts
- augroup END
-]], false)
-
-vim.cmd [[
- au BufNewFile,BufRead app/javascript/*.scss |
-       setl path+=app/javascript/,node_modules |
-       setl suffixesadd+=.css,.scss,.sass |
-       setl isfname+=@-@ |
-       setl inex=substitute(v:fname,'^\\~','','')
-]]
-
 vim.cmd [[
  au BufNewFile,BufRead */*.lua setl path+=lua
 ]]
