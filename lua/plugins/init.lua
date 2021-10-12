@@ -242,7 +242,6 @@ return packer.startup(function()
 
 
    -- load luasnips + cmp related in insert mode only
-
    use {
       "rafamadriz/friendly-snippets",
       -- event = "InsertEnter",
