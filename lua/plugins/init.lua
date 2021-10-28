@@ -20,6 +20,12 @@ return packer.startup(function()
     "tacahiroy/vim-ripgrep",
     branch = 'fix-e1208'
    }
+   use {
+     "github/copilot.vim",
+     setup = function()
+     end
+   }
+
    use "tpope/vim-tbone"
    use "tpope/vim-eunuch"
    use "tpope/vim-unimpaired"
@@ -222,6 +228,9 @@ return packer.startup(function()
          end, 0)
       end,
    }
+   use {
+     "williamboman/nvim-lsp-installer",
+    }
 
    use {
       "neovim/nvim-lspconfig",
