@@ -251,50 +251,20 @@ return packer.startup(function()
 
 
    -- load luasnips + cmp related in insert mode only
-   use {
-      "rafamadriz/friendly-snippets",
-      -- event = "InsertEnter",
-   }
+   -- use {
+   --    "rafamadriz/friendly-snippets",
+   --    -- event = "InsertEnter",
+   -- }
 
    use {
       "hrsh7th/nvim-cmp",
-      after = "friendly-snippets",
       config = function()
          require "plugins.configs.cmp"
       end,
    }
-   use {
-     "tzachar/cmp-tabnine",
-     run = "./install.sh",
-     requires = "hrsh7th/nvim-cmp",
-     after = "cmp_luasnip",
-     config = function()
-       local tabnine = require('cmp_tabnine.config')
-       tabnine:setup({
-         max_lines = 1000;
-         max_num_results = 20;
-         sort = true;
-       })
-     end
-   }
-
-   use {
-      "L3MON4D3/LuaSnip",
-      wants = "friendly-snippets",
-      after = "nvim-cmp",
-      config = function()
-         require("plugins.configs.others").luasnip()
-      end,
-   }
-
-   use {
-      "saadparwaiz1/cmp_luasnip",
-      after = "LuaSnip",
-   }
 
    use {
       "hrsh7th/cmp-nvim-lua",
-      after = "cmp_luasnip",
    }
 
    use {
@@ -308,13 +278,13 @@ return packer.startup(function()
    }
 
    -- misc plugins
-   use {
-      "windwp/nvim-autopairs",
-      after = "nvim-cmp",
-      config = function()
-         require("plugins.configs.others").autopairs()
-      end,
-   }
+   --use {
+   --   "windwp/nvim-autopairs",
+   --   after = "nvim-cmp",
+   --   config = function()
+   --      require("plugins.configs.others").autopairs()
+   --   end,
+   --}
 
    use {
       "sbdchd/neoformat",
