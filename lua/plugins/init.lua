@@ -23,9 +23,17 @@ return packer.startup(function()
    use {
      "github/copilot.vim",
      setup = function()
+       vim.g.copilot_no_tab_map = true
+     end,
+     config = function()
+       vim.api.nvim_exec([[
+        imap <silent><script><expr> <C-J> copilot#Accept("\<CR>")
+       ]], true)
      end
    }
 
+   use 'AndrewRadev/diffurcate.vim'
+   -- git diff | vim - -R +Diffurcate
    use "tpope/vim-tbone"
    use "tpope/vim-eunuch"
    use "tpope/vim-unimpaired"
@@ -218,23 +226,10 @@ return packer.startup(function()
    -- lsp stuff
 
    use {
-      "kabouzeid/nvim-lspinstall",
-      opt = true,
-      setup = function()
-         require("core.utils").packer_lazy_load "nvim-lspinstall"
-         -- reload the current file so lsp actually starts for it
-         vim.defer_fn(function()
-            vim.cmd "silent! e %"
-         end, 0)
-      end,
+     'williamboman/nvim-lsp-installer'
    }
    use {
-     "williamboman/nvim-lsp-installer",
-    }
-
-   use {
       "neovim/nvim-lspconfig",
-      after = "nvim-lspinstall",
       config = function()
          require "plugins.configs.lspconfig"
       end,
