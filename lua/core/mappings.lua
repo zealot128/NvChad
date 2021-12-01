@@ -31,14 +31,14 @@ M.misc = function()
 
    local function optional_mappings()
       -- don't yank text on cut ( x )
-      if not config.options.copy_cut then
-         map({ "n", "v" }, "x", '"_x')
-      end
+      -- if not config.options.copy_cut then
+      --    map({ "n", "v" }, "x", '"_x')
+      -- end
 
       -- don't yank text on delete ( dd )
-      if not config.options.copy_del then
-         map({ "n", "v" }, "dd", '"_dd')
-      end
+      -- if not config.options.copy_del then
+      --    map({ "n", "v" }, "dd", '"_dd')
+      -- end
 
       -- navigation within insert mode
       if config.options.insert_nav then
