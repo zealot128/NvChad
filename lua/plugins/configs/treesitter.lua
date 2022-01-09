@@ -9,7 +9,7 @@ ts_config.setup {
    },
    highlight = {
       enable = true,
-      use_languagetree = false,
+      use_languagetree = true,
       additional_vim_regex_highlighting = false,
    },
    incremental_selection = {
@@ -31,6 +31,6 @@ parser_config.pug = {
       -- url = "/Users/stefan/LocalProjects/tree-sitter-pug",
       files = { "src/parser.c", "src/scanner.cc" },
    },
-   filetype = "pug", -- if filetype does not agrees with parser name
+   -- filetype = "pug", -- if filetype does not agrees with parser name
    -- used_by = { "vue" }, -- additional filetypes that use this parser
 }

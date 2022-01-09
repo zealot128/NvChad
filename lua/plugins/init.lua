@@ -18,7 +18,6 @@ return packer.startup(function()
      -- TODO https://github.com/jremmen/vim-ripgrep/pull/56
      -- "jremmen/vim-ripgrep"
     "tacahiroy/vim-ripgrep",
-    branch = 'fix-e1208'
    }
    use {
      "github/copilot.vim",
@@ -163,7 +162,10 @@ return packer.startup(function()
    }
 
    use {
-      "famiu/feline.nvim",
+     -- "famiu/feline.nvim",
+     -- TODO: https://github.com/famiu/feline.nvim/pull/176
+     "ram02z/feline.nvim",
+      branch = "diagnostic",
       disable = not plugin_status.feline,
       after = "nvim-web-devicons",
       config = function()
@@ -203,7 +205,6 @@ return packer.startup(function()
 
    use {
       "nvim-treesitter/nvim-treesitter",
-      branch = "0.5-compat",
       event = "BufRead",
       config = function()
          require "plugins.configs.treesitter"
@@ -235,14 +236,14 @@ return packer.startup(function()
       end,
    }
 
-   use {
-      "ray-x/lsp_signature.nvim",
-      disable = not plugin_status.lspsignature,
-      after = "nvim-lspconfig",
-      config = function()
-         require("plugins.configs.others").signature()
-      end,
-   }
+   -- use {
+   --    "ray-x/lsp_signature.nvim",
+   --    disable = not plugin_status.lspsignature,
+   --    after = "nvim-lspconfig",
+   --    config = function()
+   --       require("plugins.configs.others").signature()
+   --    end,
+   -- }
 
 
    -- load luasnips + cmp related in insert mode only
