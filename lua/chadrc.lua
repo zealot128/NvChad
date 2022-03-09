@@ -367,5 +367,8 @@ vim.opt.includeexpr = [[substitute(v:fname, '^[/\~@]\+', '', '')]]
 vim.api.nvim_exec([[
   iabbrev vbase <template lang='pug'><CR>div<CR></template><CR><CR><script lang='ts'><CR>import Vue from 'vue'<CR><CR>export default Vue.extend({<CR>props: {}<CR>})<CR></script><CR><style scoped><CR></style>
 ]], true)
+vim.api.nvim_exec([[
+  iabbrev v3base <template><CR><div></div><CR></template><CR><CR><script lang='ts' setup><CR>import { ref, computed } from 'vue'<CR><CR>const props = defineProps<{}>()<CR></script><CR><CR><style scoped><CR></style>
+]], true)
 
 return M

@@ -19,6 +19,7 @@ return packer.startup(function()
      -- "jremmen/vim-ripgrep"
     "tacahiroy/vim-ripgrep",
    }
+   use "rhysd/vim-grammarous"
    use {
      "github/copilot.vim",
      setup = function()
