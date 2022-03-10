@@ -1,6 +1,6 @@
 local M = {}
-vim.api.nvim_exec([[command Rroutes Einitializer]], true)
-vim.api.nvim_exec([[command Eroutes Einitializer]], true)
+vim.api.nvim_exec([[command! Rroutes Einitializer]], true)
+vim.api.nvim_exec([[command! Eroutes Einitializer]], true)
 
 M.config = function()
    -- " let g:rails_abbreviations=0
@@ -16,6 +16,31 @@ M.config = function()
          ["test"] = "spec/services/%s_spec.rb",
          ["related"] = "app/models/%s.rb",
          ["template"] = "class %S\n\n  def run\n  end\nend",
+      },
+      ["app/graphql/types/*_type.rb"] = {
+         ["command"] = "gtype",
+         ["affinity"] = "model",
+         ["rubyAction"] = { "field", "argument" },
+         ["related"] = "app/models/%s.rb",
+         ["template"] = {
+           "class Types::{camelcase|capitalize|colons}Type < Types::BaseObject",
+           "  field :id, ID, null: false",
+           "end",
+         },
+      },
+      ["app/graphql/mutations/*.rb"] = {
+         ["command"] = "gmutation",
+         ["related"] = "app/models/%s.rb",
+         ["rubyAction"] = { "argument", "field" },
+         ["template"] = {
+           "class Mutations::{camelcase|capitalize|colors} < Mutations::BaseMutation",
+           "  argument :input, Types::{camelcase|capitalize|colons}Type, required: true",
+           "  field :errors, [::Types::ValidationErrorsType], null: false",
+           "",
+           "  def resolve(input:)",
+           "  end",
+           "end",
+         }
       },
       ["app/components/*.rb"] = {
          ["command"] = "component",

@@ -104,7 +104,7 @@ return packer.startup(function()
    use {
       "tpope/vim-rails",
       setup = function()
-         require "plugins/configs/vim-rails"
+         require "plugins/configs/vim-rails".config()
       end,
    }
    use {
