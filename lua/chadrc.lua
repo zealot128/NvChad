@@ -166,9 +166,6 @@ M.mappings.plugin = {
    better_escape = {
       esc_insertmode = { "jk" }, -- multiple mappings allowed
    },
-   nvimtree = {
-      toggle = "<C-n>", -- file manager
-   },
    neoformat = {
       format = "<leader>fm",
    },
@@ -370,5 +367,12 @@ vim.api.nvim_exec([[
 vim.api.nvim_exec([[
   iabbrev v3base <template><CR><div></div><CR></template><CR><CR><script lang='ts' setup><CR>import { ref, computed } from 'vue'<CR><CR>const props = defineProps<{}>()<CR></script><CR><CR><style scoped><CR></style>
 ]], true)
+
+vim.api.nvim_set_keymap('n', '<C-n>',
+    ":NeoTreeRevealToggle<CR>",
+    { noremap = true, silent = true })
+vim.api.nvim_set_keymap('n', '-',
+    ":NeoTreeRevealInSplitToggle<CR>",
+    { noremap = true, silent = true })
 
 return M
