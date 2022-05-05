@@ -148,6 +148,9 @@ return packer.startup(function()
 
    use {
       "NvChad/nvim-base16.lua",
+      -- totally differnent after that point
+      commit = "489408c1d0a3d310ecddd383ddc4389df862f6ad",
+
       after = "packer.nvim",
       config = function()
          require("colors").init()
