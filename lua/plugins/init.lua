@@ -379,9 +379,9 @@ return packer.startup(function()
              ["H"] = "toggle_hidden",
              ["I"] = "toggle_gitignore",
              ["R"] = "refresh",
-             ["/"] = "fuzzy_finder",
+             --["/"] = "fuzzy_finder",
              --["/"] = "filter_as_you_type", -- this was the default until v1.28
-             --["/"] = "none" -- Assigning a key to "none" will remove the default mapping
+             ["/"] = "none", -- Assigning a key to "none" will remove the default mapping
              ["f"] = "filter_on_submit",
              ["<c-x>"] = "clear_filter",
              ["a"] = "add",
